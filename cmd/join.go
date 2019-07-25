@@ -15,7 +15,7 @@ import (
 
 func init() {
 	joinCmd.Flags().StringVarP(&joinParams.name, "name", "n", "", "the name you would like to be addressed by")
-	joinCmd.Flags().StringVarP(&joinParams.topic, "topic", "t", "general", "topic of the conversation")
+	joinCmd.Flags().StringVarP(&joinParams.topic, "topic", "t", "chat", "topic of the conversation")
 	rootCmd.AddCommand(joinCmd)
 }
 
