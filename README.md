@@ -6,12 +6,24 @@ functions within ./cmd/join.go.
 
 ```go
 func sendMessage(ctx context.Context, topic *servicebus.Topic, name, message string) error {
-	// TODO: Fill in with send functionality
+	ctx, span := tab.StartSpan(ctx, "join.sendMessage")
+	defer span.End()
+
+	// TODO: Create a ChatMessage
+
+	// TODO: marshal ChatMessage into bits
+
+	// TODO: send message to topic
 	return nil
 }
 
 func listenForAMessage(ctx context.Context, subscription *servicebus.Subscription) (*ChatMessage, error) {
-	// TODO: Fill in with receive functionality
+	ctx, span := tab.StartSpan(ctx, "join.listenForAMessage")
+	defer span.End()
+
+	// TODO: receive one message from the subscription and unmarshal into ChatMessage
+
+	// TODO return ChatMessage
 	return nil, nil
 }
 ```

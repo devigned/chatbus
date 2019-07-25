@@ -3,12 +3,12 @@ package cmd
 import (
 	"bufio"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 
 	servicebus "github.com/Azure/azure-service-bus-go"
+	"github.com/devigned/tab"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -20,11 +20,13 @@ func init() {
 }
 
 type (
+	// JoinParams are the parameters for the join command
 	JoinParams struct {
 		name  string
 		topic string
 	}
 
+	// ChatMessage is the structure of the messages to send and receive from the Topic / Subscription
 	ChatMessage struct {
 		Message string `json:"message,omitempty"`
 		Name    string `json:"name,omitempty"`
@@ -43,6 +45,9 @@ var (
 			return checkAuthFlags()
 		},
 		Run: RunWithCtx(func(ctx context.Context, cmd *cobra.Command, args []string) {
+			ctx, span := tab.StartSpan(ctx, "join.RunWithCtx")
+			defer span.End()
+
 			topic, subscription, err := buildTopicAndSubscription(ctx, joinParams.topic, joinParams.name)
 			if err != nil {
 				log.Error(err)
@@ -68,8 +73,8 @@ var (
 						}
 
 						if msg.Name != joinParams.name {
-						// print messages not from me
-						fmt.Println(fmt.Sprintf("%s: %s", msg.Name, msg.Message))
+							// print messages not from me
+							fmt.Println(fmt.Sprintf("%s: %s", msg.Name, msg.Message))
 						}
 					}
 				}
@@ -95,16 +100,31 @@ var (
 )
 
 func sendMessage(ctx context.Context, topic *servicebus.Topic, name, message string) error {
-	// TODO: Fill in with send functionality
+	ctx, span := tab.StartSpan(ctx, "join.sendMessage")
+	defer span.End()
+
+	// TODO: Create a ChatMessage
+
+	// TODO: marshal ChatMessage into bits
+
+	// TODO: send message to topic
 	return nil
 }
 
 func listenForAMessage(ctx context.Context, subscription *servicebus.Subscription) (*ChatMessage, error) {
-	// TODO: Fill in with receive functionality
+	ctx, span := tab.StartSpan(ctx, "join.listenForAMessage")
+	defer span.End()
+
+	// TODO: receive one message from the subscription and unmarshal into ChatMessage
+
+	// TODO return ChatMessage
 	return nil, nil
 }
 
 func buildTopicAndSubscription(ctx context.Context, topic, sub string) (*servicebus.Topic, *servicebus.Subscription, error) {
+	ctx, span := tab.StartSpan(ctx, "buildTopicAndSubscription")
+	defer span.End()
+
 	ns, err := servicebus.NewNamespace(servicebus.NamespaceWithConnectionString(connStr))
 	if err != nil {
 		return nil, nil, err
@@ -139,6 +159,9 @@ func buildTopicAndSubscription(ctx context.Context, topic, sub string) (*service
 }
 
 func ensureTopic(ctx context.Context, tm *servicebus.TopicManager, name string, opts ...servicebus.TopicManagementOption) (*servicebus.TopicEntity, error) {
+	ctx, span := tab.StartSpan(ctx, "ensureTopic")
+	defer span.End()
+
 	te, err := tm.Get(ctx, name)
 	if err == nil {
 		return te, err
@@ -154,6 +177,9 @@ func ensureTopic(ctx context.Context, tm *servicebus.TopicManager, name string, 
 }
 
 func ensureSubscription(ctx context.Context, sm *servicebus.SubscriptionManager, name string, opts ...servicebus.SubscriptionManagementOption) (*servicebus.SubscriptionEntity, error) {
+	ctx, span := tab.StartSpan(ctx, "ensureSubscription")
+	defer span.End()
+
 	subEntity, err := sm.Get(ctx, name)
 	if err == nil {
 		return subEntity, err

@@ -40,6 +40,7 @@ var (
 	}
 )
 
+// RunWithCtx will execute a command within a context and provide cancelation on OS Signals
 func RunWithCtx(run func(ctx context.Context, cmd *cobra.Command, args []string)) func(cmd *cobra.Command, args []string) {
 	ctx, cancel := context.WithCancel(context.Background())
 
