@@ -96,35 +96,12 @@ var (
 
 func sendMessage(ctx context.Context, topic *servicebus.Topic, name, message string) error {
 	// TODO: Fill in with send functionality
-	chatMsg := ChatMessage{
-		Name:    name,
-		Message: message,
-	}
-
-	str, err := json.Marshal(chatMsg)
-	if err != nil {
-		return err
-	}
-
-	msg := servicebus.NewMessageFromString(string(str))
-	return topic.Send(ctx, msg)
+	return nil
 }
 
 func listenForAMessage(ctx context.Context, subscription *servicebus.Subscription) (*ChatMessage, error) {
 	// TODO: Fill in with receive functionality
-	var msg *servicebus.Message
-	err := subscription.ReceiveOne(ctx, servicebus.HandlerFunc(func(ctx context.Context, message *servicebus.Message) error {
-		msg = message
-		return message.Complete(ctx)
-	}))
-
-	if err != nil {
-		return nil, err
-	}
-
-	var chatMsg ChatMessage
-	err = json.Unmarshal(msg.Data, &chatMsg)
-	return &chatMsg, err
+	return nil, nil
 }
 
 func buildTopicAndSubscription(ctx context.Context, topic, sub string) (*servicebus.Topic, *servicebus.Subscription, error) {
