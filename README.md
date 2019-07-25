@@ -23,7 +23,7 @@ func listenForAMessage(ctx context.Context, subscription *servicebus.Subscriptio
 
 	// TODO: receive one message from the subscription and unmarshal into ChatMessage
 
-	// TODO return ChatMessage
+	// TODO: return ChatMessage
 	return nil, nil
 }
 ```
